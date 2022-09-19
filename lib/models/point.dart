@@ -42,19 +42,6 @@ class Point extends Equatable {
   factory Point.fromJson(String source) =>
       Point.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  // factory Point.fromString(String source) {
-  //   List<int> list = source
-  //       .substring(1, source.length - 2)
-  //       .split(',')
-  //       .map((e) => int.parse(e))
-  //       .toList();
-
-  //   return Point(
-  //     x: list[0],
-  //     y: list[1],
-  //   );
-  // }
-
   Point copyWith({
     int? x,
     int? y,
