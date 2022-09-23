@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pathfinder/pages/common/bottom_button.dart';
 import 'package:pathfinder/pages/process_page.dart';
+import 'package:pathfinder/services/find_a_path.dart';
 
 class LaunchPage extends StatelessWidget {
   LaunchPage({Key? key}) : super(key: key);
@@ -28,8 +29,13 @@ class LaunchPage extends StatelessWidget {
               ),
               TextFormField(
                 controller: _textController,
-                validator: (value) =>
-                    Uri.parse(value!).isAbsolute ? null : 'Incorrect value!',
+                validator: (value) {
+                  FindAPathService().isLocalData
+                      ? null
+                      : Uri.parse(value!).isAbsolute
+                          ? null
+                          : 'Incorrect value!';
+                },
                 decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.swap_horiz),
                 ),

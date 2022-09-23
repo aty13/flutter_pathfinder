@@ -3,16 +3,12 @@ import 'package:pathfinder/pathfinder/pathfinder.dart';
 import 'package:pathfinder/services/api_service.dart';
 
 class FindAPathService {
-  bool isLocalData = false;
+  bool isLocalData = true;
   static List<Pathfinder> tasks = [];
 
-  FindAPathService() {
-    if (isLocalData) {
-      _getTasksFromLocal();
-    }
-  }
+  FindAPathService() {}
 
-  void _getTasksFromLocal() {
+  void getTasksFromLocal() {
     for (int i = 0; i < data.length; i++) {
       var buff = Pathfinder(data[i]);
       tasks.add(buff);

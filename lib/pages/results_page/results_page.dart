@@ -15,29 +15,8 @@ class ResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Results list page')),
-        body:
-            // FindAPathService().isLocal
-            //     ?
-            ResultsList(tasks: _tasks)
-        // : FutureBuilder<List<Pathfinder>>(
-        //     future: FindAPathService().getTasksFromApi(),
-        //     builder: ((context, snapshot) {
-        //       if (snapshot.hasData) {
-        //         List<Pathfinder> tasks = snapshot.data as List<Pathfinder>;
-        //         return ResultsList(tasks: tasks);
-        //       }
-
-        //       if (snapshot.hasError) {
-        //         return const Center(
-        //           child: Text('Some error occured'),
-        //         );
-        //       }
-        //       return const Center(
-        //         child: CircularProgressIndicator(),
-        //       );
-        //     }),
-        //   ),
-        );
+      appBar: AppBar(title: const Text('Results list page')),
+      body: ResultsList(tasks: _tasks),
+    );
   }
 }

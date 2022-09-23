@@ -12,6 +12,7 @@ class Pathfinder {
 
   Pathfinder(Map<String, dynamic> map) {
     _task = Task(
+      id: map['id'],
       matrix: returnMatrix(map['field']),
       start: Point.fromMap(map['start']),
       end: Point.fromMap(map['end']),

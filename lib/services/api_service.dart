@@ -11,4 +11,10 @@ class ApiService {
   }
 
   // _postAnswers() {}
+  Future postResponse() async {
+    http.Response response = await http.post(
+      Uri.parse('https://flutter.webspark.dev/flutter/api'),
+      // body: jsonEncode(object),
+    );
+  }
 }
