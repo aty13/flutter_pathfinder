@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class BottomButton extends StatelessWidget {
   final String label;
-  final Function onPressed;
+  final VoidCallback? onPressed;
 
   const BottomButton({
     Key? key,
@@ -24,7 +24,7 @@ class BottomButton extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () => onPressed.call(),
+        onPressed: onPressed,
         child: Text(
           label,
           style: const TextStyle(color: Colors.black),

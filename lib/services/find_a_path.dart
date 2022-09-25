@@ -3,10 +3,8 @@ import 'package:pathfinder/pathfinder/pathfinder.dart';
 import 'package:pathfinder/services/api_service.dart';
 
 class FindAPathService {
-  bool isLocalData = true;
+  bool isLocalData = false;
   static List<Pathfinder> tasks = [];
-
-  FindAPathService() {}
 
   void getTasksFromLocal() {
     for (int i = 0; i < data.length; i++) {

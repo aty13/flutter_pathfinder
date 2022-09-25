@@ -47,9 +47,8 @@ class LaunchPage extends StatelessWidget {
                   if (_formKey.currentState!.validate()) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: ((context) => ProcessPage(
-                              url: _textController.text,
-                            )),
+                        builder: ((context) =>
+                            ProcessPage(url: _textController.text)),
                       ),
                     );
                   }

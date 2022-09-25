@@ -1,12 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:pathfinder/models/point.dart';
 import 'package:pathfinder/models/task.dart';
 
 class Pathfinder {
+  late String id;
   late Task _task;
   late Point _currentPoint;
-  final List<Point> _calculationResult = [];
+  final List<Point> _steps = [];
   String _resultMessage = '';
   // late int _distance; //TODO:
 
@@ -17,7 +20,7 @@ class Pathfinder {
       start: Point.fromMap(map['start']),
       end: Point.fromMap(map['end']),
     );
-
+    id = _task.id;
     _currentPoint = _task.start;
     runToEnd();
   }
@@ -26,12 +29,22 @@ class Pathfinder {
 
   Point get currentPoint => _currentPoint;
 
-  List<Point> get calculationResult => _calculationResult;
+  List<Point> get steps => _steps;
 
   String get resultMessage => _resultMessage;
 
   void setResultMessage(String message) {
     _resultMessage = message;
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'result': {
+        'steps': [..._steps],
+        'path': '',
+      },
+    };
   }
 
   /// Pathfinder
@@ -47,12 +60,12 @@ class Pathfinder {
     }
 
     while (getValidNeighbours(_currentPoint).isNotEmpty) {
-      makeAMove(_currentPoint);
+      makeAMove();
     }
 
     if (_currentPoint == _task.end) {
       String message = '';
-      for (Point result in _calculationResult) {
+      for (Point result in _steps) {
         message += '$result->';
       }
       setResultMessage(message.substring(0, message.length - 2));
@@ -61,7 +74,9 @@ class Pathfinder {
     }
   }
 
-  void makeAMove(Point currentPoint) {
+  void makeAMove() {
+    List<Point> possibleMoves = getValidNeighbours(_currentPoint);
+
     _currentPoint = getValidNeighbours(_currentPoint).reduce((value, element) {
       if (value.points >= element.points) {
         return Point(x: value.x, y: value.y);
@@ -70,8 +85,44 @@ class Pathfinder {
       }
     });
     _task.matrix[_currentPoint.x][_currentPoint.y].isAPath = true;
-    _calculationResult.add(_currentPoint);
+    _steps.add(_currentPoint);
     log('current point is: $_currentPoint');
+
+    // if (task.end.x > _currentPoint.x &&
+    //     task.end.y > _currentPoint.y &&
+    //     possibleMoves.any(
+    //       (element) =>
+    //           element == Point(x: _currentPoint.x + 1, y: _currentPoint.y + 1),
+    //     )) {
+    //   _currentPoint = Point(x: _currentPoint.x + 1, y: _currentPoint.y + 1);
+    // }
+
+    // if (task.end.x > _currentPoint.x &&
+    //     task.end.y < _currentPoint.y &&
+    //     possibleMoves.any(
+    //       (element) =>
+    //           element == Point(x: _currentPoint.x + 1, y: _currentPoint.y - 1),
+    //     )) {
+    //   _currentPoint = Point(x: _currentPoint.x + 1, y: _currentPoint.y - 1);
+    // }
+
+    // if (task.end.x < _currentPoint.x &&
+    //     task.end.y > _currentPoint.y &&
+    //     possibleMoves.any(
+    //       (element) =>
+    //           element == Point(x: _currentPoint.x - 1, y: _currentPoint.y + 1),
+    //     )) {
+    //   _currentPoint = Point(x: _currentPoint.x - 1, y: _currentPoint.y + 1);
+    // }
+
+    // if (task.end.x < _currentPoint.x &&
+    //     task.end.y < _currentPoint.y &&
+    //     possibleMoves.any(
+    //       (element) =>
+    //           element == Point(x: _currentPoint.x - 1, y: _currentPoint.y - 1),
+    //     )) {
+    //   _currentPoint = Point(x: _currentPoint.x - 1, y: _currentPoint.y = 1);
+    // }
   }
 
   List<Point> getValidNeighbours(Point current) {
@@ -120,23 +171,16 @@ class Pathfinder {
 
   /// [Point] part
 
-  bool isPointStarting(Point point) {
-    if (_task.start.x == point.x && _task.start.y == point.y) {
-      return true;
-    }
+  bool isPointStarting(Point point) => _task.start == point;
 
-    return false;
-  }
-
-  bool isPointEnding(Point point) =>
-      _task.end.x == point.x && _task.end.y == point.y;
+  bool isPointEnding(Point point) => _task.end == point;
 
   bool isPointValid(Task task, Point point) {
     return point.x >= 0 &&
         point.y >= 0 &&
         point.x < task.matrix.length &&
         point.y < task.matrix.length &&
-        !_calculationResult.any((element) => element == point);
+        !_steps.any((step) => step == point);
   }
 
   /// Matrix part

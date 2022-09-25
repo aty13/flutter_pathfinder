@@ -19,11 +19,13 @@ class ResultsList extends StatelessWidget {
         _tasks[index].runToEnd();
         return ListTile(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: ((context) => MatrixPage(
-                    pathfinder: _tasks[index],
-                  )),
-            ));
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: ((context) => MatrixPage(
+                      pathfinder: _tasks[index],
+                    )),
+              ),
+            );
           },
           // ignore: unnecessary_string_interpolations
           title: Text('${_tasks[index].resultMessage}'),

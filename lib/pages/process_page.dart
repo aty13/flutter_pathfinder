@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pathfinder/services/api_service.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import 'package:pathfinder/pages/common/bottom_button.dart';
@@ -17,11 +18,12 @@ class ProcessPage extends StatefulWidget {
 
 class _ProcessPageState extends State<ProcessPage> {
   final FindAPathService _pathService = FindAPathService();
+  bool _isLoading = true;
   int _percent = 0;
   late Timer _timer;
   @override
   void initState() {
-    _timer = Timer.periodic(const Duration(milliseconds: 500), (_) {
+    _timer = Timer.periodic(const Duration(milliseconds: 400), (_) {
       setState(() {
         _percent += 10;
         if (_percent >= 100) {
@@ -33,9 +35,10 @@ class _ProcessPageState extends State<ProcessPage> {
     if (_pathService.isLocalData) {
       _pathService.getTasksFromLocal();
     } else {
-      _pathService
-          .getTasksFromApi(widget.url)
-          .then((value) => FindAPathService.tasks = value);
+      _pathService.getTasksFromApi(widget.url).then((value) {
+        FindAPathService.tasks = value;
+        _isLoading = false;
+      });
     }
 
     super.initState();
@@ -72,10 +75,29 @@ class _ProcessPageState extends State<ProcessPage> {
           const Spacer(),
           BottomButton(
             label: 'Send results to server',
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => ResultsPage()));
-            },
+            onPressed: _isLoading
+                ? null
+                : () async {
+                    setState(() {
+                      _isLoading = true;
+                      var body = [];
+                      for (var task in FindAPathService.tasks) {
+                        body.add(task.toMap());
+                      }
+
+                      ApiService().postResponse(body).then((_) {
+                        setState(() {
+                          _isLoading = false;
+                        });
+
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ResultsPage(),
+                          ),
+                        );
+                      });
+                    });
+                  },
           )
         ],
       ),
